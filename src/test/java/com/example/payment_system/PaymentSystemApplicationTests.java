@@ -19,7 +19,7 @@ class PaymentSystemApplicationTests {
         request.put("name","Tom");
         request.put("phone","0976268135");
         request.put("mail","01847613@gmail.com");
-        request.put("pwd","123456789");
+        request.put("pwd","123456a$7A89");
 
         try {
             memberService.registerFilter(request);

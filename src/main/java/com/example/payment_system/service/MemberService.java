@@ -4,7 +4,8 @@ import com.example.payment_system.orm.PaymentMemberInfo;
 import com.example.payment_system.repository.PaymentMemberInfoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -19,10 +20,16 @@ public class MemberService {
         return pmiRepo.findAll();
     }
 
-    public boolean register(HashMap request) throws NoSuchFieldException {
-        registerFilter(request);
-        addMember(request);
-        return true;
+    public boolean register(HashMap request) {
+        try {
+            registerFilter(request);
+            checkIfDuplicated(request);
+            addMember(request);
+            return true;
+        }catch (Exception e) {
+            e.getMessage();
+            return false;
+        }
     }
 
     public void registerFilter(HashMap request) throws NoSuchFieldException {
@@ -41,7 +48,7 @@ public class MemberService {
             throw new NoSuchFieldException("mail can not be null");
         }
         boolean isFitPwdRule = checkIfStrongPwd(pwd);
-        if (request.get("pwd") == null || mail.equals("") || phone.length() > 20 || phone.length() < 8 || !isFitPwdRule) {
+        if (pwd == null || pwd.equals("") || pwd.length() > 20 || pwd.length() < 8 || !isFitPwdRule) {
             throw new NoSuchFieldException("password can not be null");
         }
     }
@@ -98,7 +105,16 @@ public class MemberService {
 
         return true;
     }
+    @Transactional(isolation = Isolation.READ_COMMITTED)
+    public void checkIfDuplicated(HashMap request) throws NoSuchFieldException {
+        String mail = (String) request.get("mail");
+        List<PaymentMemberInfo> paymentMemberInfo = pmiRepo.getPaymentMemberInfosByPmiMemberEmail(mail);
 
+        if (paymentMemberInfo.size() > 0) {
+            throw new NoSuchFieldException("帳號已存在");
+        }
+    }
+    @Transactional
     public void addMember(HashMap request) {
         String name = (String) request.get("name");
         String phone = (String) request.get("phone");
@@ -113,5 +129,29 @@ public class MemberService {
                 .pmiLastloginTime(LocalDateTime.now())
                 .build();
         pmiRepo.save(paymentMemberInfo);
+    }
+
+    public boolean login(HashMap request) {
+        try {
+            checkIfValid(request);
+            return true;
+        }catch (Exception e) {
+            e.getMessage();
+            return false;
+        }
+    }
+
+    @Transactional
+    public void checkIfValid(HashMap request) throws NoSuchFieldException {
+        String mail = (String) request.get("mail");
+        String pwd = (String) request.get("pwd");
+
+        List<PaymentMemberInfo> paymentMemberInfo = pmiRepo.getPaymentMemberInfosByPmiMemberEmail(mail);
+        if (paymentMemberInfo.size() == 0) {
+            throw new NoSuchFieldException("帳號不存在");
+        }
+        if (!paymentMemberInfo.get(0).getPmiMemberpwd().equals(pwd)) {
+            throw new NoSuchFieldException("密碼錯誤");
+        }
     }
 }

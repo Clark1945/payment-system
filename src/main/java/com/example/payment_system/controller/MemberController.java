@@ -2,12 +2,18 @@ package com.example.payment_system.controller;
 
 import com.example.payment_system.orm.PaymentMemberInfo;
 import com.example.payment_system.service.MemberService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
-
 @RestController
 @RequestMapping("/api")
 public class MemberController {
@@ -15,6 +21,16 @@ public class MemberController {
     @Autowired
     private MemberService memberService;
 
+    @Tag(name = "get", description = "GET methods of Payment APIs")
+    @Operation(summary = "取得當前所有會員資訊",
+            description = "取得所有會員資料，" +
+                        " \n  限定Admin使用者使用（規劃開發中）")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200",
+                    content = { @Content(mediaType = "application/json",
+                    schema = @Schema(implementation = PaymentMemberInfo.class)) }),
+            @ApiResponse(responseCode = "404", description = "API Not Exists",
+                    content = @Content) })
     @GetMapping("/member")
     public List<PaymentMemberInfo> getAllMember() {
         System.out.println("Start get All member info~");
@@ -23,10 +39,40 @@ public class MemberController {
         return response;
     }
 
+    @Tag(name = "post", description = "POST methods of Payment APIs")
+    @Operation(summary = "會員註冊API",
+            description = "判斷書入格式是否異常，如無異常就新增資料庫")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = PaymentMemberInfo.class)) }),
+            @ApiResponse(responseCode = "404", description = "API Not Exists",
+                    content = @Content) })
     @PostMapping("/member")
-    public boolean register(@RequestBody HashMap reqMap) throws NoSuchFieldException {
+    public boolean register(
+            @Parameter(
+                    description = "request content from web",
+                    required = true)
+            @RequestBody HashMap reqMap) {
         System.out.println("Start register~");
         boolean response = memberService.register(reqMap);
+        System.out.println("Response = " + response);
+        return response;
+    }
+
+    @Tag(name = "put", description = "PUT methods of Payment APIs")
+    @Operation(summary = "會員登入API",
+            description = "判斷登入帳號是否存在，如無就回復錯誤")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200",
+                    content = { @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = PaymentMemberInfo.class)) }),
+            @ApiResponse(responseCode = "404", description = "API Not Exists",
+                    content = @Content) })
+    @PutMapping("/member")
+    public boolean login(@RequestBody HashMap reqMap) {
+        System.out.println("Start login~");
+        boolean response = memberService.login(reqMap);
         System.out.println("Response = " + response);
         return response;
     }
