@@ -24,15 +24,16 @@ public class MemberController {
     @Tag(name = "get", description = "GET methods of Payment APIs")
     @Operation(summary = "取得當前所有會員資訊",
             description = "取得所有會員資料，" +
-                        " \n  限定Admin使用者使用（規劃開發中）")
+                        "  限定Admin使用者使用（規劃開發中）")
     @ApiResponses({
             @ApiResponse(responseCode = "200",
                     content = { @Content(mediaType = "application/json",
                     schema = @Schema(implementation = PaymentMemberInfo.class)) }),
-            @ApiResponse(responseCode = "404", description = "API Not Exists",
+            @ApiResponse(responseCode = "500", description = "System Error",
                     content = @Content) })
     @GetMapping("/member")
-    public List<PaymentMemberInfo> getAllMember() {
+    public List<PaymentMemberInfo> getAllMember(
+            @RequestParam(value = "member_token",required = false) String token) {
         System.out.println("Start get All member info~");
         List<PaymentMemberInfo> response = memberService.getAllMember();
         System.out.println("Response = " + response.get(0));
@@ -41,7 +42,11 @@ public class MemberController {
 
     @Tag(name = "post", description = "POST methods of Payment APIs")
     @Operation(summary = "會員註冊API",
-            description = "判斷書入格式是否異常，如無異常就新增資料庫")
+            description = "判斷輸入格式是否異常，如無異常就新增資料庫。" +
+                    "資料須符合以下條件：\n " +
+                    "1. name,phone,mail,pwd 不可為空。\n" +
+                    "2. 除mail以外，長度不可以超過20個字元。mail長度不可超過50個字元。\n" +
+                    "3. 密碼規則必須要包含數字、大小寫字母以及符號。\n")
     @ApiResponses({
             @ApiResponse(responseCode = "200",
                     content = { @Content(mediaType = "application/json",
