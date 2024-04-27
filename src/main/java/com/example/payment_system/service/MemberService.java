@@ -23,7 +23,7 @@ public class MemberService {
         return pmiRepo.findAll();
     }
 
-    public String register(HashMap request) {
+    public String register(HashMap<String,String> request) {
         RegisterObject registerObj = RegisterObject.createRegister(request);
         try {
             registerFilter(registerObj);
@@ -44,17 +44,17 @@ public class MemberService {
         String pwd = request.getPassword();
 
         if (name == null || name.equals("") || name.length() > 20) {
-            throw new NoSuchFieldException("name can not be null");
+            throw new NoSuchFieldException("name Error");
         }
         if (phone == null || phone.equals("") || phone.length() > 20 || !phone.matches("[0-9]+")) {
-            throw new NoSuchFieldException("phone can not be null");
+            throw new NoSuchFieldException("phone Error");
         }
-        if (mail == null || mail.equals("") || mail.length() > 50 || !mail.contains("@")) {
-            throw new NoSuchFieldException("mail can not be null");
+        if (mail == null || mail.length() > 50 || !mail.contains("@")) {
+            throw new NoSuchFieldException("mail Error");
         }
         boolean isFitPwdRule = checkIfStrongPwd(pwd);
-        if (pwd == null || pwd.equals("") || pwd.length() > 20 || pwd.length() < 8 || !isFitPwdRule) {
-            throw new NoSuchFieldException("password can not be null");
+        if (pwd.length() > 20 || pwd.length() < 8 || !isFitPwdRule) {
+            throw new NoSuchFieldException("password Error");
         }
     }
 
@@ -133,16 +133,16 @@ public class MemberService {
                 .pmiMemberpwd(pwd)
                 .pmiLastloginTime(LocalDateTime.now())
                 .build();
-        pmiRepo.save(paymentMemberInfo);
+        pmiRepo.saveAndFlush(paymentMemberInfo);
     }
 
-    public String login(HashMap request) {
+    public String login(HashMap<String,String> request) {
         RegisterObject registerObject = RegisterObject.createLogin(request);
         try {
             checkIfValid(registerObject);
             return "Success";
         }catch (Exception e) {
-            e.getMessage();
+            log.info(e.getMessage());
             return "Fail";
         }
     }
