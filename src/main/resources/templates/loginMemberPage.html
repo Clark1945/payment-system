@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+
+    <title>登入會員頁面</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link th:href="@{/dist/vendor/bootstrap/scss/bootstrap.scss}" href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet"/>
+
+    <!-- Custom CSS -->
+    <link th:href="@{/dist/css/sb-admin-2.css}" href="../dist/css/sb-admin-2.css" rel="stylesheet"/>
+
+    <!-- Custom Fonts -->
+    <link th:href="@{/dist/vendor/fontawesome-free/css/fontawesome.min.css}" href="../vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css"/>
+
+</head>
+
+<body>
+
+<div id="wrapper">
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+<!--        <div class="navbar-header">-->
+<!--            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">-->
+<!--                <span class="sr-only">Toggle navigation</span>-->
+<!--                <span class="icon-bar"></span>-->
+<!--                <span class="icon-bar"></span>-->
+<!--                <span class="icon-bar"></span>-->
+<!--            </button>-->
+<!--            <a class="navbar-brand" href="index.html">會員註冊</a>-->
+<!--        </div>-->
+    </nav>
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">會員登入</h1>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <!-- /.row -->
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        這是Payment系統會員登入入口
+                    </div>
+                    <br>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <form role="form">
+                                    <div class="form-group">
+                                        <label>電子郵件地址*</label>
+                                        <input class="form-control" placeholder="請輸入正確的信箱" th:id="email"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>會員密碼</label>
+                                        <input class="form-control" placeholder="請輸入密碼" type="password" th:id="password"/>
+                                    </div>
+
+                                    <a class="btn btn-success btn-icon-split" onclick="login()">
+                                        <span class="text">會員登入</span>
+                                    </a>
+                                    <a href = "#" class="btn btn-danger btn-icon-split">
+                                        <span class="text">會員註冊</span>
+                                    </a>
+                                </form>
+                            </div>
+                        </div>
+                        <!-- /.row (nested) -->
+                    </div>
+                    <!-- /.panel-body -->
+                </div>
+                <!-- /.panel -->
+            </div>
+        </div>
+        <!--col-lg-12 -->
+    </div>
+    <!-- page-wrapper-->
+</div>
+<!-- /#wrapper -->
+
+<!-- jQuery -->
+<script th:src="@{/dist/vendor/jquery/jquery.min.js}" src="../vendor/jquery/jquery.min.js"></script>
+
+<!-- Bootstrap Core JavaScript -->
+<script th:src="@{/dist/vendor/bootstrap/js/bootstrap.min.js}" src="../vendor/bootstrap/js/bootstrap.min.js"></script>
+
+<!-- Custom Theme JavaScript -->
+<script th:src="@{/dist/js/sb-admin-2.js}" src="../dist/js/sb-admin-2.js"></script>
+
+<script th:src="@{/js/register.js}" src="../js/register.js"></script>
+
+</body>
+
+</html>

@@ -1,7 +1,9 @@
 package com.example.payment_system.service;
 
+import com.example.payment_system.RegisterObject;
 import com.example.payment_system.orm.PaymentMemberInfo;
 import com.example.payment_system.repository.PaymentMemberInfoRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
@@ -12,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 
 @Service("MemberService")
+@Slf4j
 public class MemberService {
     @Autowired
     private PaymentMemberInfoRepository pmiRepo;
@@ -20,23 +23,25 @@ public class MemberService {
         return pmiRepo.findAll();
     }
 
-    public boolean register(HashMap request) {
+    public String register(HashMap request) {
+        RegisterObject registerObj = RegisterObject.createRegister(request);
         try {
-            registerFilter(request);
-            checkIfDuplicated(request);
-            addMember(request);
-            return true;
+            registerFilter(registerObj);
+            checkIfDuplicated(registerObj);
+            addMember(registerObj);
+            return "Success";
         }catch (Exception e) {
-            e.getMessage();
-            return false;
+            e.printStackTrace();
+            log.info(e.getMessage());
+            return "Fail";
         }
     }
 
-    public void registerFilter(HashMap request) throws NoSuchFieldException {
-        String name = (String) request.get("name");
-        String phone = (String) request.get("phone");
-        String mail = (String) request.get("mail");
-        String pwd = (String) request.get("pwd");
+    public void registerFilter(RegisterObject request) throws NoSuchFieldException {
+        String name = request.getName();
+        String phone = request.getPhone();
+        String mail = request.getEmail();
+        String pwd = request.getPassword();
 
         if (name == null || name.equals("") || name.length() > 20) {
             throw new NoSuchFieldException("name can not be null");
@@ -106,8 +111,8 @@ public class MemberService {
         return true;
     }
     @Transactional(isolation = Isolation.READ_COMMITTED)
-    public void checkIfDuplicated(HashMap request) throws NoSuchFieldException {
-        String mail = (String) request.get("mail");
+    public void checkIfDuplicated(RegisterObject request) throws NoSuchFieldException {
+        String mail = request.getEmail();
         List<PaymentMemberInfo> paymentMemberInfo = pmiRepo.getPaymentMemberInfosByPmiMemberEmail(mail);
 
         if (paymentMemberInfo.size() > 0) {
@@ -115,11 +120,11 @@ public class MemberService {
         }
     }
     @Transactional
-    public void addMember(HashMap request) {
-        String name = (String) request.get("name");
-        String phone = (String) request.get("phone");
-        String mail = (String) request.get("mail");
-        String pwd = (String) request.get("pwd");
+    public void addMember(RegisterObject request) {
+        String name = request.getName();
+        String phone = request.getPhone();
+        String mail = request.getEmail();
+        String pwd = request.getPassword();
 
         PaymentMemberInfo paymentMemberInfo = PaymentMemberInfo.builder()
                 .pmsMemberName(name)
@@ -131,20 +136,21 @@ public class MemberService {
         pmiRepo.save(paymentMemberInfo);
     }
 
-    public boolean login(HashMap request) {
+    public String login(HashMap request) {
+        RegisterObject registerObject = RegisterObject.createLogin(request);
         try {
-            checkIfValid(request);
-            return true;
+            checkIfValid(registerObject);
+            return "Success";
         }catch (Exception e) {
             e.getMessage();
-            return false;
+            return "Fail";
         }
     }
 
     @Transactional
-    public void checkIfValid(HashMap request) throws NoSuchFieldException {
-        String mail = (String) request.get("mail");
-        String pwd = (String) request.get("pwd");
+    public void checkIfValid(RegisterObject request) throws NoSuchFieldException {
+        String mail = request.getEmail();
+        String pwd = request.getPassword();
 
         List<PaymentMemberInfo> paymentMemberInfo = pmiRepo.getPaymentMemberInfosByPmiMemberEmail(mail);
         if (paymentMemberInfo.size() == 0) {

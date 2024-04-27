@@ -54,13 +54,13 @@ public class MemberController {
             @ApiResponse(responseCode = "404", description = "API Not Exists",
                     content = @Content) })
     @PostMapping("/member")
-    public boolean register(
+    public String register(
             @Parameter(
                     description = "request content from web",
                     required = true)
             @RequestBody HashMap reqMap) {
         System.out.println("Start register~");
-        boolean response = memberService.register(reqMap);
+        String response = memberService.register(reqMap);
         System.out.println("Response = " + response);
         return response;
     }
@@ -75,9 +75,9 @@ public class MemberController {
             @ApiResponse(responseCode = "404", description = "API Not Exists",
                     content = @Content) })
     @PutMapping("/member")
-    public boolean login(@RequestBody HashMap reqMap) {
+    public String login(@RequestBody HashMap reqMap) {
         System.out.println("Start login~");
-        boolean response = memberService.login(reqMap);
+        String response = memberService.login(reqMap);
         System.out.println("Response = " + response);
         return response;
     }

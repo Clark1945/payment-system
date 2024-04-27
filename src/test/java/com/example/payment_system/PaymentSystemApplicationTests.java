@@ -18,11 +18,12 @@ class PaymentSystemApplicationTests {
         HashMap<String,String> request = new HashMap<>();
         request.put("name","Tom");
         request.put("phone","0976268135");
-        request.put("mail","01847613@gmail.com");
-        request.put("pwd","123456a$7A89");
+        request.put("email","01847613@gmail.com");
+        request.put("password","123456a$7A89");
 
+        RegisterObject registerObject = RegisterObject.createRegister(request);
         try {
-            memberService.registerFilter(request);
+            memberService.registerFilter(registerObject);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             errorCount += 1;
@@ -36,11 +37,12 @@ class PaymentSystemApplicationTests {
         HashMap<String,String> request = new HashMap<>();
         request.put("name","");
         request.put("phone","0976268135");
-        request.put("mail","01847613@gmail.com");
-        request.put("pwd","123456789");
+        request.put("email","01847613@gmail.com");
+        request.put("password","123456789");
 
+        RegisterObject registerObject = RegisterObject.createRegister(request);
         try {
-            memberService.registerFilter(request);
+            memberService.registerFilter(registerObject);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             errorCount += 1;
@@ -54,11 +56,12 @@ class PaymentSystemApplicationTests {
         HashMap<String,String> request = new HashMap<>();
         request.put("name","AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
         request.put("phone","0976268135");
-        request.put("mail","01847613@gmail.com");
-        request.put("pwd","123456789");
+        request.put("email","01847613@gmail.com");
+        request.put("password","123456789");
 
+        RegisterObject registerObject = RegisterObject.createRegister(request);
         try {
-            memberService.registerFilter(request);
+            memberService.registerFilter(registerObject);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             errorCount += 1;
@@ -71,11 +74,12 @@ class PaymentSystemApplicationTests {
         int errorCount = 0;
         HashMap<String,String> request = new HashMap<>();
         request.put("phone","0976268135");
-        request.put("mail","01847613@gmail.com");
-        request.put("pwd","123456789");
+        request.put("email","01847613@gmail.com");
+        request.put("password","123456789");
 
+        RegisterObject registerObject = RegisterObject.createRegister(request);
         try {
-            memberService.registerFilter(request);
+            memberService.registerFilter(registerObject);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             errorCount += 1;
@@ -89,11 +93,12 @@ class PaymentSystemApplicationTests {
         HashMap request = new HashMap<>();
         request.put("name","Tom");
         request.put("phone","@0976-268-135");
-        request.put("mail","01847613@gmail.com");
-        request.put("pwd","123456789");
+        request.put("email","01847613@gmail.com");
+        request.put("password","123456789");
 
+        RegisterObject registerObject = RegisterObject.createRegister(request);
         try {
-            memberService.registerFilter(request);
+            memberService.registerFilter(registerObject);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             errorCount += 1;
@@ -107,11 +112,12 @@ class PaymentSystemApplicationTests {
         HashMap request = new HashMap<>();
         request.put("name","Tom");
         request.put("phone","0976268135");
-        request.put("mail","01847613gmail.com");
-        request.put("pwd","123456789");
+        request.put("email","01847613gmail.com");
+        request.put("password","123456789");
 
+        RegisterObject registerObject = RegisterObject.createRegister(request);
         try {
-            memberService.registerFilter(request);
+            memberService.registerFilter(registerObject);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             errorCount += 1;
@@ -125,11 +131,12 @@ class PaymentSystemApplicationTests {
         HashMap request = new HashMap<>();
         request.put("name","Tom");
         request.put("phone","0976268135");
-        request.put("mail","01847613@gmail.com");
-        request.put("pwd","1234");
+        request.put("email","01847613@gmail.com");
+        request.put("password","1234");
 
+        RegisterObject registerObject = RegisterObject.createRegister(request);
         try {
-            memberService.registerFilter(request);
+            memberService.registerFilter(registerObject);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             errorCount += 1;
@@ -143,26 +150,26 @@ class PaymentSystemApplicationTests {
         HashMap request = new HashMap<>();
         request.put("name","Tom");
         request.put("phone","0976268135");
-        request.put("mail","01847613@gmail.com");
-        request.put("pwd","11111111111");
+        request.put("email","01847613@gmail.com");
+        request.put("password","11111111111");
 
-        Assert.isTrue(!memberService.checkIfStrongPwd((String) request.get("pwd")),"比對錯誤");
+        Assert.isTrue(!memberService.checkIfStrongPwd((String) request.get("password")),"比對錯誤");
 
-        request.replace("pwd","AAAAAAAAAA");
+        request.replace("password","AAAAAAAAAA");
 
-        Assert.isTrue(!memberService.checkIfStrongPwd((String) request.get("pwd")),"比對錯誤");
+        Assert.isTrue(!memberService.checkIfStrongPwd((String) request.get("password")),"比對錯誤");
 
-        request.replace("pwd","aaaaaaaaaa");
+        request.replace("password","aaaaaaaaaa");
 
-        Assert.isTrue(!memberService.checkIfStrongPwd((String) request.get("pwd")),"比對錯誤");
+        Assert.isTrue(!memberService.checkIfStrongPwd((String) request.get("password")),"比對錯誤");
 
-        request.replace("pwd","aaaaaAAAAaaaaa");
+        request.replace("password","aaaaaAAAAaaaaa");
 
-        Assert.isTrue(!memberService.checkIfStrongPwd((String) request.get("pwd")),"比對錯誤");
+        Assert.isTrue(!memberService.checkIfStrongPwd((String) request.get("password")),"比對錯誤");
 
-        request.replace("pwd","Aa42567986@");
+        request.replace("password","Aa42567986@");
 
-        Assert.isTrue(memberService.checkIfStrongPwd((String) request.get("pwd")),"比對錯誤");
+        Assert.isTrue(memberService.checkIfStrongPwd((String) request.get("password")),"比對錯誤");
 
     }
 }

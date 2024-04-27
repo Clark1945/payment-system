@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Hello Thymeleaf</title>
+</head>
+<body>
+<h1 th:text="'Welcome to Payment System'"></h1>
+<ul>
+    <li th:each="eachDemo : ${eachDemos}" th:text="${eachDemo}"></li>
+</ul>
+
+<ul th:if="${errors != null}" style='color: rgb(255, 0, 0);'>
+    <li th:each="error : ${errors}" th:text="${error}">error message</li>
+</ul>
+
+<p th:text="'Hello, ' + ${name} + '!'"/>
+</body>
+</html>
