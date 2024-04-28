@@ -10,6 +10,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -32,12 +35,21 @@ public class MemberController {
             @ApiResponse(responseCode = "500", description = "System Error",
                     content = @Content) })
     @GetMapping("/member")
-    public List<PaymentMemberInfo> getAllMember(
+    public ResponseEntity<List<PaymentMemberInfo>> getAllMember(
             @RequestParam(value = "member_token",required = false) String token) {
         System.out.println("Start get All member info~");
         List<PaymentMemberInfo> response = memberService.getAllMember();
         System.out.println("Response = " + response.get(0));
-        return response;
+        if (token == null) {
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Content-Type","application/json");
+            headers.add("ErrMsg","Invalid Token");
+            return  ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .headers(headers)
+                    .body(null);
+        } else {
+            return ResponseEntity.ok(response);
+        }
     }
 
     @Tag(name = "post", description = "POST methods of Payment APIs")
