@@ -72,3 +72,10 @@ function login() {
             alert(json)
         });
 }
+
+function clearInput() {
+    document.getElementById("name").value = ""
+    document.getElementById("phone").value = ""
+    document.getElementById("email").value = ""
+    document.getElementById("password").value = ""
+}

@@ -16,6 +16,7 @@ import java.util.List;
 @Service("MemberService")
 @Slf4j
 public class MemberService {
+
     @Autowired
     private PaymentMemberInfoRepository pmiRepo;
 

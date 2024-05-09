@@ -2,6 +2,7 @@ package com.example.payment_system.controller;
 
 import com.example.payment_system.orm.PaymentMemberInfo;
 import com.example.payment_system.service.MemberService;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -26,13 +27,12 @@ public class MemberController {
 
     @Tag(name = "get", description = "GET methods of Payment APIs")
     @Operation(summary = "取得當前所有會員資訊",
-            description = "取得所有會員資料，" +
-                        "  限定Admin使用者使用（規劃開發中）")
+            description = "限制：member_token必須帶上，否則回復 400 Bad Request.")
     @ApiResponses({
             @ApiResponse(responseCode = "200",
                     content = { @Content(mediaType = "application/json",
                     schema = @Schema(implementation = PaymentMemberInfo.class)) }),
-            @ApiResponse(responseCode = "500", description = "System Error",
+            @ApiResponse(responseCode = "400", description = "Bad Request 未包含Token",
                     content = @Content) })
     @GetMapping("/member")
     public ResponseEntity<List<PaymentMemberInfo>> getAllMember(

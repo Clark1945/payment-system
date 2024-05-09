@@ -2,12 +2,27 @@ package com.example.payment_system;
 
 import com.example.payment_system.service.MemberService;
 import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpHeaders;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.RequestBuilder;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.util.Assert;
 
 import java.util.HashMap;
 
-@SpringBootTest
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+
+@SpringBootTest()
+@RunWith(SpringRunner.class)
+@AutoConfigureMockMvc
 class PaymentSystemApplicationTests {
 
     MemberService memberService = new MemberService();
@@ -170,6 +185,28 @@ class PaymentSystemApplicationTests {
         request.replace("password","Aa42567986@");
 
         Assert.isTrue(memberService.checkIfStrongPwd((String) request.get("password")),"比對錯誤");
+
+    }
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @Test
+    public void ifObjectTransmitted() throws Exception {
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add("Content-Type","application/json");
+        httpHeaders.add("ClientIp","1.1.1.1");
+        RequestBuilder requestBuilder =
+                MockMvcRequestBuilders
+                        .get("/api/member")
+                        .headers(httpHeaders)
+                        .param("member_token","001");
+
+        MvcResult result = mockMvc.perform(requestBuilder)
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andReturn();
+        System.out.print(result);
 
     }
 }
